@@ -1,0 +1,9 @@
+{
+  "name": "default",
+  "rdbms": "postgresql",
+  "host": "127.0.0.1",
+  "port": 5432,
+  "dbname": "poctime",
+  "user": "admin",
+  "passwd": "admin@123"
+}
