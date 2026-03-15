@@ -1,18 +1,18 @@
-//
-// Created by Mauricio Kiniz on 14/03/26.
-//
+#pragma once
 
-#ifndef PROJETO_API_ADDPERSONSERVICE_HPP
-#define PROJETO_API_ADDPERSONSERVICE_HPP
 #include "../../../core/business/AddBusinessCase.hpp"
 #include "../domain/PersonDto.hpp"
-
+#include "../domain/IPersonRepository.hpp"
+#include <memory>
 
 namespace person::domain {
     class AddPersonService : public core::business::AddBusinessCase<PersonRequest, PersonResponse> {
     public:
-        PersonResponse execute(const PersonRequest &request) override;
+        explicit AddPersonService(std::shared_ptr<IPersonRepository> repository);
+
+        drogon::Task<PersonResponse> execute(const PersonRequest &request) override;
+
+    private:
+        std::shared_ptr<IPersonRepository> repository_;
     };
 }
-
-#endif //PROJETO_API_ADDPERSONSERVICE_HPP

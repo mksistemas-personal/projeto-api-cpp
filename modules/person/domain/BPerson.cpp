@@ -29,4 +29,22 @@ namespace person::domain {
 
         return nullptr;
     }
+
+    Json::Value BPerson::toJson() const {
+        Json::Value item;
+
+        item["id"] = (Json::Int64) data_.getValueOfId();
+        item["name"] = data_.getValueOfName();
+
+        auto doc = getDocument();
+        if (doc) {
+            Json::Value docJson;
+            docJson["type"] = DocumentType::description(doc->getType());
+            docJson["value"] = doc->getIdentifier();
+            item["document"] = docJson;
+        } else {
+            item["document"] = Json::nullValue;
+        }
+        return item;
+    }
 } // person

@@ -1,81 +1,88 @@
 {
-    "listeners": [
-        {
-            "address": "0.0.0.0",
-            "port": 8181,
-            "https": false
-        }
-    ],
-    "db_clients": [
-        {
-            "name": "default",
-            "rdbms": "postgresql",
-            "host": "127.0.0.1",
-            "port": 5432,
-            "dbname": "poctime",
-            "user": "admin",
-            "passwd": "admin@123",
-            "is_fast": false,
-            "connection_number": 10
-        }
-    ],
-    "app": {
-        "number_of_threads": 0,
-        "log": {
-            "log_path": "./",
-            "logfile_base_name": "",
-            "log_level": "DEBUG",
-            "display_local_time": true
-        },
-        "run_as_daemon": false,
-        "rebind_port": false,
-        "show_executable_path": true,
-        "use_sendfile": true,
-        "use_gzip": true,
-        "use_brotli": true,
-        "static_file_headers": [
-            {
-                "name": "Access-Control-Allow-Origin",
-                "value": "*"
-            }
-        ],
-        "upload_path": "uploads",
-        "file_types": [
-            "gif",
-            "png",
-            "jpg",
-            "js",
-            "css",
-            "html",
-            "ico",
-            "swf",
-            "xap",
-            "apk",
-            "cur",
-            "xml"
-        ],
-        "mime_headers": [
-            {
-                "mime": "text/html",
-                "header": "text/html; charset=utf-8"
-            }
-        ],
-        "max_connections": 100000,
-        "max_connections_per_ip": 0,
-        "load_static_resources": true,
-        "enable_session": false,
-        "session_timeout": 0,
-        "session_cookie_config": {
-            "cookie_key": "JSESSIONID",
-            "cookie_path": "/",
-            "cookie_domain": "",
-            "cookie_secure": false,
-            "cookie_httponly": true,
-            "cookie_same_site": "Lax"
-        },
-        "document_root": "./",
-        "home_page": "index.html",
-        "use_implicit_page": true,
-        "implicit_page": "index.html"
+  "listeners": [
+    {
+      "address": "0.0.0.0",
+      "port": 8181,
+      "https": false
     }
+  ],
+  "db_clients": [
+    {
+      "name": "default",
+      "rdbms": "postgresql",
+      "host": "127.0.0.1",
+      "port": 5432,
+      "dbname": "poctime",
+      "user": "admin",
+      "passwd": "admin@123",
+      "is_fast": false,
+      "connection_number": 10
+    }
+  ],
+  "app": {
+    "number_of_threads": 0,
+    "log": {
+      "log_path": "./",
+      "logfile_base_name": "",
+      "log_level": "DEBUG",
+      "display_local_time": true
+    },
+    "run_as_daemon": false,
+    "rebind_port": false,
+    "show_executable_path": true,
+    "use_sendfile": true,
+    "use_gzip": true,
+    "use_brotli": true,
+    "static_file_headers": [
+      {
+        "name": "Access-Control-Allow-Origin",
+        "value": "*"
+      }
+    ],
+    "upload_path": "uploads",
+    "file_types": [
+      "gif",
+      "png",
+      "jpg",
+      "js",
+      "css",
+      "html",
+      "ico",
+      "swf",
+      "xap",
+      "apk",
+      "cur",
+      "xml"
+    ],
+    "mime_headers": [
+      {
+        "mime": "text/html",
+        "header": "text/html; charset=utf-8"
+      }
+    ],
+    "max_connections": 100000,
+    "max_connections_per_ip": 0,
+    "load_static_resources": true,
+    "enable_session": false,
+    "session_timeout": 0,
+    "session_cookie_config": {
+      "cookie_key": "JSESSIONID",
+      "cookie_path": "/",
+      "cookie_domain": "",
+      "cookie_secure": false,
+      "cookie_httponly": true,
+      "cookie_same_site": "Lax"
+    },
+    "document_root": "./",
+    "home_page": "index.html",
+    "use_implicit_page": true,
+    "implicit_page": "index.html"
+  },
+  "plugins": [
+    {
+      "name": "core::config::ServiceLocator",
+      "dependencies": [],
+      "config": {}
+    }
+  ]
 }

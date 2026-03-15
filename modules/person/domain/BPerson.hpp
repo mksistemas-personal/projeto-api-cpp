@@ -6,6 +6,7 @@
 #define PROJETO_API_PERSON_HPP
 #include <memory>
 #include <string>
+#include <utility>
 #include <json/json.h>
 
 #include "../../base/document/Document.hpp"
@@ -22,15 +23,20 @@ namespace person::domain {
     public:
         BPerson() = default;
 
-        explicit BPerson(const drogon_model::poctime::Person &data)
-            : data_(data) {
+        explicit BPerson(drogon_model::poctime::Person data)
+            : data_(std::move(data)) {
         }
 
         [[nodiscard]] const drogon_model::poctime::Person &getData() const {
             return data_;
         }
 
+        [[nodiscard]] drogon_model::poctime::Person &getData() {
+            return data_;
+        }
+
         [[nodiscard]] std::unique_ptr<base::document::Document> getDocument() const;
+ [[nodiscard]] Json::Value toJson() const;
     };
 } // person
 

@@ -1,7 +1,11 @@
 #include <drogon/drogon.h>
 #include <iostream>
+#include <sstream>
 #include "modules/models/Person.h"
 #include "modules/person/domain/BPerson.hpp"
+#include "core/config/ServiceLocator.hpp"
+#include "modules/person/services/AddPersonService.hpp"
+#include "modules/person/domain/IPersonRepository.hpp"
 
 int main() {
     std::cout << "Iniciando servidor Drogon..." << std::endl;
@@ -13,22 +17,29 @@ int main() {
     drogon::app().registerHandler("/test_coro",
                                   [](drogon::HttpRequestPtr req,
                                      std::function<void(const drogon::HttpResponsePtr &)> callback) -> drogon::Task<> {
-                                      auto dbClient = drogon::app().getDbClient();
-                                      drogon::orm::CoroMapper<drogon_model::poctime::Person> mapper(dbClient);
-
                                       try {
-                                          // Busca assíncrona usando co_await
-                                          auto person = co_await mapper.findByPrimaryKey(802978046123027198);
-                                          auto bperson = person::domain::BPerson(person);
-                                          auto document = bperson.getDocument();
-                                          auto res = drogon::HttpResponse::newHttpResponse();
-                                          res->setBody("Pessoa encontrada (Coro): " + person.getValueOfName() +
-                                                       " | Documento: " + person.getValueOfDocument());
+                                          auto locator = drogon::app().getPlugin<core::config::ServiceLocator>();
+                                          auto repo = locator->getService<person::domain::IPersonRepository>();
+
+                                          // Busca assíncrona de todas as pessoas usando o repositório
+                                          auto persons = co_await repo->findAll();
+
+                                          Json::Value ret;
+                                          ret["status"] = "ok";
+                                          Json::Value data(Json::arrayValue);
+
+                                          for (const auto &p: persons) {
+                                              auto item = p.toJson();
+                                              data.append(item);
+                                          }
+                                          ret["data"] = data;
+
+                                          auto res = drogon::HttpResponse::newHttpJsonResponse(ret);
                                           callback(res);
-                                      } catch (const drogon::orm::DrogonDbException &e) {
+                                      } catch (const std::exception &e) {
                                           auto res = drogon::HttpResponse::newHttpResponse();
-                                          res->setStatusCode(drogon::k404NotFound);
-                                          res->setBody("Pessoa não encontrada ou erro no banco (Coro).");
+                                          res->setStatusCode(drogon::k500InternalServerError);
+                                          res->setBody("Erro ao buscar pessoas: " + std::string(e.what()));
                                           callback(res);
                                       }
                                       co_return;

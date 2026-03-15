@@ -6,6 +6,8 @@
 #define PROJETO_API_ADDBUSINESSCASE_HPP
 
 
+#include <drogon/drogon.h>
+
 namespace core::business {
     template<typename TRequest, typename TResponse>
     class AddBusinessCase {
@@ -14,7 +16,7 @@ namespace core::business {
 
         AddBusinessCase() = default;
 
-        virtual TResponse execute(const TRequest &request) = 0;
+        virtual drogon::Task<TResponse> execute(const TRequest &request) = 0;
     };
 } // business
 // core

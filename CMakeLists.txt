@@ -9,6 +9,9 @@ find_package(Drogon REQUIRED)
 add_executable(projeto_api main.cpp
         modules/person/domain/BPerson.cpp
         modules/person/domain/BPerson.hpp
+        modules/person/domain/IPersonRepository.hpp
+        modules/person/adapters/PersonRepository.cpp
+        modules/person/adapters/PersonRepository.hpp
         modules/base/document/Document.hpp
         modules/base/document/DocumentType.hpp
         core/business/AddBusinessCase.hpp
@@ -31,6 +34,8 @@ add_executable(projeto_api main.cpp
         modules/person/domain/PersonDto.hpp
         modules/person/services/AddPersonService.cpp
         modules/person/services/AddPersonService.hpp
+        core/config/ServiceLocator.cpp
+        core/config/ServiceLocator.hpp
 )
 
 # Vincular bibliotecas
