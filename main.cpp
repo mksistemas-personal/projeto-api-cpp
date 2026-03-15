@@ -1,5 +1,7 @@
 #include <drogon/drogon.h>
 #include <iostream>
+#include "modules/models/Person.h"
+#include "modules/person/domain/BPerson.hpp"
 
 int main() {
     std::cout << "Iniciando servidor Drogon..." << std::endl;
@@ -7,24 +9,30 @@ int main() {
     // Carregar configuração
     drogon::app().loadConfigFile("../config.json");
 
-    // Adicionar um handler simples para testar a conexão com o banco
-    drogon::app().registerHandler("/test_db", [](const drogon::HttpRequestPtr& req,
-                                                  std::function<void (const drogon::HttpResponsePtr &)> &&callback) {
-        auto dbClient = drogon::app().getDbClient();
-        dbClient->execSqlAsync("SELECT version();", [callback](const drogon::orm::Result &result) {
-            auto res = drogon::HttpResponse::newHttpResponse();
-            if (result.size() > 0) {
-                res->setBody("Conectado ao Postgres! Versão: " + result[0]["version"].as<std::string>());
-            } else {
-                res->setBody("Falha ao obter versão do Postgres.");
-            }
-            callback(res);
-        }, [callback](const drogon::orm::DrogonDbException &e) {
-            auto res = drogon::HttpResponse::newHttpResponse();
-            res->setBody("Erro na conexão com o banco: " + std::string(e.base().what()));
-            callback(res);
-        });
-    });
+    // Adicionar um handler para testar CoroMapper (não bloqueante)
+    drogon::app().registerHandler("/test_coro",
+                                  [](drogon::HttpRequestPtr req,
+                                     std::function<void(const drogon::HttpResponsePtr &)> callback) -> drogon::Task<> {
+                                      auto dbClient = drogon::app().getDbClient();
+                                      drogon::orm::CoroMapper<drogon_model::poctime::Person> mapper(dbClient);
+
+                                      try {
+                                          // Busca assíncrona usando co_await
+                                          auto person = co_await mapper.findByPrimaryKey(802978046123027198);
+                                          auto bperson = person::domain::BPerson(person);
+                                          auto document = bperson.getDocument();
+                                          auto res = drogon::HttpResponse::newHttpResponse();
+                                          res->setBody("Pessoa encontrada (Coro): " + person.getValueOfName() +
+                                                       " | Documento: " + person.getValueOfDocument());
+                                          callback(res);
+                                      } catch (const drogon::orm::DrogonDbException &e) {
+                                          auto res = drogon::HttpResponse::newHttpResponse();
+                                          res->setStatusCode(drogon::k404NotFound);
+                                          res->setBody("Pessoa não encontrada ou erro no banco (Coro).");
+                                          callback(res);
+                                      }
+                                      co_return;
+                                  });
 
     // Iniciar o loop de eventos
     drogon::app().run();

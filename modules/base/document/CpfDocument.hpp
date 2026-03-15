@@ -13,8 +13,8 @@
 namespace base::document {
     class CpfDocument : public Document {
     public:
-        explicit CpfDocument(std::string identity)
-            : Document(DocumentType::Value::Cpf, std::move(identity)) {
+        explicit CpfDocument(std::string identity, std::string complement = "")
+            : Document(DocumentType::Value::Cpf, std::move(identity), std::move(complement)) {
         }
     };
 } // document

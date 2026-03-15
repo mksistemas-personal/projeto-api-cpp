@@ -12,20 +12,26 @@ namespace base::document {
     class Document {
     private:
         DocumentType::Value type;
-        std::string identity;
+        std::string identifier_;
+        std::string complement_;
 
     public:
-        Document(DocumentType::Value type, std::string identity)
+        Document(DocumentType::Value type, std::string identifier, std::string complement = "")
             : type(type),
-              identity(std::move(identity)) {
+              identifier_(std::move(identifier)),
+              complement_(std::move(complement)) {
         }
 
         [[nodiscard]] DocumentType::Value getType() const {
             return type;
         }
 
-        [[nodiscard]] const std::string &getIdentity() const {
-            return identity;
+        [[nodiscard]] const std::string &getIdentifier() const {
+            return identifier_;
+        }
+
+        [[nodiscard]] const std::string &getComplement() const {
+            return complement_;
         }
     };
 };

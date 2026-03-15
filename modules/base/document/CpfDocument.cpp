@@ -4,7 +4,7 @@
 
 #include "CpfDocument.hpp"
 
-namespace base {
-    namespace document {
-    } // document
-} // base
+
+namespace base::document {
+} // document
+// base

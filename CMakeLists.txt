@@ -9,15 +9,28 @@ find_package(Drogon REQUIRED)
 add_executable(projeto_api main.cpp
         modules/person/domain/BPerson.cpp
         modules/person/domain/BPerson.hpp
-        modules/base/document/Document.cpp
         modules/base/document/Document.hpp
         modules/base/document/DocumentType.hpp
         core/business/AddBusinessCase.hpp
-        modules/person/domain/CreatePersonRequest.hpp
         modules/base/document/CpfDocument.cpp
         modules/base/document/CpfDocument.hpp
         modules/base/document/CnpjDocument.cpp
         modules/base/document/CnpjDocument.hpp
+        modules/models/Category.cc
+        modules/models/Category.h
+        modules/models/Client.cc
+        modules/models/Client.h
+        modules/models/Economicgroup.cc
+        modules/models/Economicgroup.h
+        modules/models/Organization.cc
+        modules/models/Organization.h
+        modules/models/Person.cc
+        modules/models/Person.h
+        modules/models/Product.cc
+        modules/models/Product.h
+        modules/person/domain/PersonDto.hpp
+        modules/person/services/AddPersonService.cpp
+        modules/person/services/AddPersonService.hpp
 )
 
 # Vincular bibliotecas
