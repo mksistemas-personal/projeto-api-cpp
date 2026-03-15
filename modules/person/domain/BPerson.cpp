@@ -30,21 +30,20 @@ namespace person::domain {
         return nullptr;
     }
 
-    Json::Value BPerson::toJson() const {
-        Json::Value item;
+    void to_json(nlohmann::json &j, const BPerson &p) {
+        j = nlohmann::json{
+            {"id", p.data_.getValueOfId()},
+            {"name", p.data_.getValueOfName()}
+        };
 
-        item["id"] = (Json::Int64) data_.getValueOfId();
-        item["name"] = data_.getValueOfName();
-
-        auto doc = getDocument();
+        auto doc = p.getDocument();
         if (doc) {
-            Json::Value docJson;
-            docJson["type"] = DocumentType::description(doc->getType());
-            docJson["value"] = doc->getIdentifier();
-            item["document"] = docJson;
+            j["document"] = {
+                {"type", DocumentType::description(doc->getType())},
+                {"value", doc->getIdentifier()}
+            };
         } else {
-            item["document"] = Json::nullValue;
+            j["document"] = nullptr;
         }
-        return item;
     }
 } // person

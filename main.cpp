@@ -1,11 +1,14 @@
 #include <drogon/drogon.h>
 #include <iostream>
-#include <sstream>
+#include <nlohmann/json.hpp>
+
+
+#include "core/adapter/Slice.hpp"
 #include "modules/models/Person.h"
 #include "modules/person/domain/BPerson.hpp"
 #include "core/config/ServiceLocator.hpp"
-#include "modules/person/services/AddPersonService.hpp"
 #include "modules/person/domain/IPersonRepository.hpp"
+
 
 int main() {
     std::cout << "Iniciando servidor Drogon..." << std::endl;
@@ -24,17 +27,16 @@ int main() {
                                           // Busca assíncrona de todas as pessoas usando o repositório
                                           auto persons = co_await repo->findAll();
 
-                                          Json::Value ret;
-                                          ret["status"] = "ok";
-                                          Json::Value data(Json::arrayValue);
+                                          // Exemplo de uso do Slice (assumindo que buscamos tudo em uma única fatia)
+                                          core::adapter::Slice<person::domain::BPerson> slice(
+                                              persons, 0, (int) persons.size(), false);
 
-                                          for (const auto &p: persons) {
-                                              auto item = p.toJson();
-                                              data.append(item);
-                                          }
-                                          ret["data"] = data;
 
-                                          auto res = drogon::HttpResponse::newHttpJsonResponse(ret);
+                                          nlohmann::json nj = slice;
+                                          auto res = drogon::HttpResponse::newHttpResponse();
+                                          res->setStatusCode(drogon::k200OK);
+                                          res->setContentTypeCode(drogon::CT_APPLICATION_JSON);
+                                          res->setBody(nj.dump());
                                           callback(res);
                                       } catch (const std::exception &e) {
                                           auto res = drogon::HttpResponse::newHttpResponse();

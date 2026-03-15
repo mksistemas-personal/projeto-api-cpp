@@ -6,6 +6,13 @@ set(CMAKE_CXX_STANDARD 20)
 # Encontrar pacotes necessários
 find_package(Drogon REQUIRED)
 
+include(FetchContent)
+FetchContent_Declare(
+        json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
+FetchContent_MakeAvailable(json)
+
 add_executable(projeto_api main.cpp
         modules/person/domain/BPerson.cpp
         modules/person/domain/BPerson.hpp
@@ -36,7 +43,8 @@ add_executable(projeto_api main.cpp
         modules/person/services/AddPersonService.hpp
         core/config/ServiceLocator.cpp
         core/config/ServiceLocator.hpp
+        core/adapter/Slice.hpp
 )
 
 # Vincular bibliotecas
-target_link_libraries(projeto_api PRIVATE Drogon::Drogon)
+target_link_libraries(projeto_api PRIVATE Drogon::Drogon nlohmann_json::nlohmann_json)

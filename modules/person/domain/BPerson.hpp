@@ -9,6 +9,7 @@
 #include <utility>
 #include <json/json.h>
 
+#include <nlohmann/json.hpp>
 #include "../../base/document/Document.hpp"
 #include "../../base/document/CpfDocument.hpp"
 #include "../../base/document/CnpjDocument.hpp"
@@ -36,7 +37,8 @@ namespace person::domain {
         }
 
         [[nodiscard]] std::unique_ptr<base::document::Document> getDocument() const;
- [[nodiscard]] Json::Value toJson() const;
+
+        friend void to_json(nlohmann::json &j, const BPerson &p);
     };
 } // person
 
