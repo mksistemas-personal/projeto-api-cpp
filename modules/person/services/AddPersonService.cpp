@@ -1,5 +1,7 @@
 #include "AddPersonService.hpp"
 
+#include "../../../core/business/BusinessException.hpp"
+
 namespace person::domain {
     AddPersonService::AddPersonService(std::shared_ptr<IPersonRepository> repository)
         : repository_(std::move(repository)) {
@@ -11,5 +13,10 @@ namespace person::domain {
         response.name = request.name;
         response.document = request.document;
         co_return response;
+    }
+
+    void AddPersonService::validate(const PersonRequest &request) {
+        if (request.name.empty())
+            throw core::business::BusinessException(PersonConstants::PERSON_NAME_NOT_EMPTY);
     }
 }

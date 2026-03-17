@@ -4,7 +4,6 @@
 
 
 #include "core/adapter/Slice.hpp"
-#include "modules/models/Person.h"
 #include "modules/person/domain/BPerson.hpp"
 #include "core/config/ServiceLocator.hpp"
 #include "modules/person/domain/IPersonRepository.hpp"
@@ -25,11 +24,12 @@ int main() {
                                           auto repo = locator->getService<person::domain::IPersonRepository>();
 
                                           // Busca assíncrona de todas as pessoas usando o repositório
-                                          auto persons = co_await repo->findAll();
+                                          auto persons = co_await repo->findPaginated(2, 10);
 
                                           // Exemplo de uso do Slice (assumindo que buscamos tudo em uma única fatia)
                                           core::adapter::Slice<person::domain::BPerson> slice(
-                                              persons, 0, (int) persons.size(), false);
+                                              persons.items, 0, static_cast<int>(persons.items.size()),
+                                              persons.hasNext);
 
 
                                           nlohmann::json nj = slice;

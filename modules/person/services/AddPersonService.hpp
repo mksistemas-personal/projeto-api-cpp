@@ -14,5 +14,7 @@ namespace person::domain {
 
     private:
         std::shared_ptr<IPersonRepository> repository_;
+
+        void validate(const PersonRequest &request);
     };
 }

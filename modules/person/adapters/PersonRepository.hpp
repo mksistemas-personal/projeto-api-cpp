@@ -15,6 +15,12 @@ namespace person::adapters {
 
         drogon::Task<std::vector<domain::BPerson> > findAll() override;
 
+        drogon::Task<domain::PaginatedResult> findPaginated(
+            size_t page,
+            size_t pageSize,
+            const drogon::orm::Criteria &criteria = drogon::orm::Criteria()
+        ) override;
+
     private:
         drogon::orm::DbClientPtr dbClient_;
     };

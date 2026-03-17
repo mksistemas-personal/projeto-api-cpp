@@ -3,8 +3,6 @@ project(projeto_api)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# Encontrar pacotes necessários
-find_package(Drogon REQUIRED)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -12,6 +10,18 @@ FetchContent_Declare(
         URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
 )
 FetchContent_MakeAvailable(json)
+
+FetchContent_Declare(
+        drogon
+        GIT_REPOSITORY https://github.com/drogonframework/drogon.git
+        GIT_TAG v1.9.12  # Use a tag estável recente; verifique releases para atualizar
+)
+
+FetchContent_MakeAvailable(drogon)
+
+
+# Encontrar pacotes necessá
+find_package(Drogon REQUIRED)
 
 add_executable(projeto_api main.cpp
         modules/person/domain/BPerson.cpp
@@ -22,6 +32,7 @@ add_executable(projeto_api main.cpp
         modules/base/document/Document.hpp
         modules/base/document/DocumentType.hpp
         core/business/AddBusinessCase.hpp
+        core/business/BusinessException.hpp
         modules/base/document/CpfDocument.cpp
         modules/base/document/CpfDocument.hpp
         modules/base/document/CnpjDocument.cpp
@@ -44,6 +55,7 @@ add_executable(projeto_api main.cpp
         core/config/ServiceLocator.cpp
         core/config/ServiceLocator.hpp
         core/adapter/Slice.hpp
+        modules/person/PersonConstants.hpp
 )
 
 # Vincular bibliotecas
